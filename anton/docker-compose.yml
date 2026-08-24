@@ -7,10 +7,10 @@ services:
       # gate, so skip umbrelOS' additional proxy auth layer.
       PROXY_AUTH_ADD: "false"
   app:
-    # Pinned to the verified build of main@34e64d4f5c8e47198b9995422b88524fe4b2e81b
+    # Pinned to the verified build of main@46516ead3453805ee870a4ac8317cd6eed0f4932
     # (CI-green). Bump this digest together with `version` on every release --
     # that bump is what generates users' update notifications.
-    image: ghcr.io/tdh-labs/anton@sha256:9d509b2fa2acc0a90e59735a3fd1f4e9b713302f7cd6580ca80dcd3b09ddf230
+    image: ghcr.io/tdh-labs/anton@sha256:fd72bcfca3939ef494b9901178b9a2ee1075575c77e59013e254fd033fb3d180
     restart: unless-stopped
     # No host port bindings: umbrelOS proxies the container's :3080 through
     # the app_proxy service above, per umbrel-app.yml's `port: 3080`.
