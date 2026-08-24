@@ -1,10 +1,20 @@
 services:
-  anton:
-    image: ghcr.io/tdh-labs/anton:latest
+  app_proxy:
+    environment:
+      APP_HOST: anton_app_1
+      APP_PORT: "3080"
+      # Anton's Ops Center already sits behind its own first-boot password
+      # gate, so skip umbrelOS' additional proxy auth layer.
+      PROXY_AUTH_ADD: "false"
+  app:
+    # Pinned to the verified build of main@34e64d4f5c8e47198b9995422b88524fe4b2e81b
+    # (CI-green). Bump this digest together with `version` on every release --
+    # that bump is what generates users' update notifications.
+    image: ghcr.io/tdh-labs/anton@sha256:9d509b2fa2acc0a90e59735a3fd1f4e9b713302f7cd6580ca80dcd3b09ddf230
     container_name: anton
     restart: unless-stopped
-    ports:
-      - "3080:3080"   # docker/auth-gate.mjs — password-gated, the only published port
+    # No host port bindings: umbrelOS proxies the container's :3080 through
+    # the app_proxy service above, per umbrel-app.yml's `port: 3080`.
     volumes:
       - anton_data:/data
     environment:
@@ -14,19 +24,12 @@ services:
       - ANTON_SERVE_PORT=8798
       - ANTON_WEB_INTERNAL_PORT=3079
       - ANTON_WEB_PORT=3080
-      # Login password for the published UI. Leave unset to auto-generate one
-      # on first boot (shown once on the login page, then persisted to the
-      # data volume) — set it explicitly only if you need a known value.
+      # Login password auto-generates on first boot and is shown once on the
+      # login page. Set ANTON_WEB_TOKEN only if you need a known value.
       - ANTON_WEB_TOKEN=${ANTON_WEB_TOKEN:-}
       - ANTON_DASHBOARD_TOKEN=${ANTON_DASHBOARD_TOKEN:-}
-      - ANTON_SSH_HOST=${ANTON_SSH_HOST:-}
-      - ANTON_SSH_USER=${ANTON_SSH_USER:-}
-      - ANTON_SSH_KEY=${ANTON_SSH_KEY:-}
-      - ANTON_SSH_COMMAND=${ANTON_SSH_COMMAND:-}
-    # Matches the Dockerfile's own HEALTHCHECK -- both call the dashboard's
-    # real /health endpoint (returns {"ok": true, "jobs": N}) on its
-    # container-internal port, not the auth-gate's public :3080/, which only
-    # proves a login page renders, not that the job engine is actually up.
+    # Mirrors the Dockerfile's HEALTHCHECK -- probes the job engine's real
+    # /health endpoint inside the container, not just the login page render.
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8799/health"]
       interval: 60s

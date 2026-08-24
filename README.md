@@ -1,18 +1,12 @@
-# Anton — Umbrel Community App Store
+# Anton — Community App Store
 
-Community app store distributing [Anton](https://github.com/TDH-Labs/anton),
-an AI agent for your small business — schedule, memory, and a governor that asks first.
+Install Anton on umbrelOS without a terminal:
 
-## Install
+1. Umbrel dashboard → **App Store** → **⋮** → **Community App Stores** → **Add Store**
+2. Paste: `https://github.com/TDH-Labs/anton-community-app-store`
+3. Open the **Anton** store → **Install**
+4. Open Anton → the login page shows your password **once** — save it
+5. Claim ownership: Umbrel → Anton → **⋮ → Logs** → find
+   `FIRST-RUN OWNER CLAIM CODE` → enter it in the Ops Center
 
-In your Umbrel dashboard: **App Store → ⋯ menu → Community App Stores → Add App Store**
-and paste this repository URL:
-
-```
-https://github.com/TDH-Labs/anton-community-app-store
-```
-
-Then install **Anton** from the store.
-
-Note: umbrelOS lists community-store apps whose app id starts with the store id,
-so this store uses id `anton` for the app `anton`.
+Updates are published here as manifest bumps (version + image digest).
