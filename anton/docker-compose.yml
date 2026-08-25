@@ -10,7 +10,7 @@ services:
     # Pinned to the verified build of main@46516ead3453805ee870a4ac8317cd6eed0f4932
     # (CI-green). Bump this digest together with `version` on every release --
     # that bump is what generates users' update notifications.
-    image: ghcr.io/tdh-labs/anton@sha256:52bf24c6c50980ccc3f6929978176c49e6551e1234dded15d16956cbf8f25686
+    image: ghcr.io/tdh-labs/anton@sha256:89c6e54c3f923291c5052e540ff7bc8a7d007e728c17dadb12e7c2587072914e
     restart: unless-stopped
     # No host port bindings: umbrelOS proxies the container's :3080 through
     # the app_proxy service above, per umbrel-app.yml's `port: 3080`.
